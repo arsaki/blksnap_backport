@@ -358,8 +358,16 @@ blk_qc_t (*submit_bio_noacct_notrace)(struct bio *) =
 void (*submit_bio_noacct_notrace)(struct bio *) =
 	(void (*)(struct bio *))((unsigned long)(submit_bio_noacct) +
 				 CALL_INSTRUCTION_LENGTH);
+#elif defined(HAVE_QC_GENERIC_MAKE_REQUEST)
+blk_qc_t (*submit_bio_noacct_notrace)(struct bio *) =
+	(blk_qc_t (*)(struct bio *))((unsigned long)(generic_make_request) +
+				 CALL_INSTRUCTION_LENGTH);
+#elif defined(HAVE_VOID_GENERIC_MAKE_REQUEST)
+void (*submit_bio_noacct_notrace)(struct bio *) =
+	(blk_qc_t (*)(struct bio *))((unsigned long)(generic_make_request) +
+				 CALL_INSTRUCTION_LENGTH);
 #else
-#error "Your kernel is too old for this module."
+#error "Unable to define submit_bio_noacct_notrace pointer. No submit_bio_noacct or generic_make_request function. __FILE__:__LINE__"
 #endif
 EXPORT_SYMBOL(submit_bio_noacct_notrace);
 
