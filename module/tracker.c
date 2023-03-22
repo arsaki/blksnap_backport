@@ -9,6 +9,7 @@
 #else
 #include <uapi/linux/blksnap.h>
 #endif
+#include "bdevfilter.h"
 #include "memory_checker.h"
 #include "tracker.h"
 #include "cbt_map.h"
