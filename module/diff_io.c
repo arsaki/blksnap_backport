@@ -6,6 +6,7 @@
 #endif
 #include <linux/blkdev.h>
 #include <linux/slab.h>
+#include <linux/version.h>
 #include "memory_checker.h"
 #include "diff_io.h"
 #include "diff_buffer.h"
@@ -213,8 +214,11 @@ int diff_io_do(struct diff_io *diff_io, struct diff_region *diff_region,
 
 	/* sumbit all bios */
 	while ((bio = bio_list_pop(&bio_list_head)))
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5,9,0)
 		submit_bio_noacct(bio);
-
+#else
+		generic_make_request(bio);
+#endif
 	if (diff_io->is_sync_io)
 		wait_for_completion_io(&diff_io->notify.sync.completion);
 

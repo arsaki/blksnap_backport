@@ -10,6 +10,7 @@
 #endif
 #include <linux/blkdev.h>
 #include <linux/list.h>
+#include <linux/version.h>
 
 #include "bdevfilter.h"
 #include "version.h"
@@ -371,7 +372,7 @@ void (*submit_bio_noacct_notrace)(struct bio *) =
 #endif
 EXPORT_SYMBOL(submit_bio_noacct_notrace);
 
-#if defined(HAVE_QC_SUBMIT_BIO_NOACCT)
+#if defined(HAVE_QC_SUBMIT_BIO_NOACCT) || defined (HAVE_QC_GENERIC_MAKE_REQUEST)
 static blk_qc_t notrace submit_bio_noacct_handler(struct bio *bio)
 #else
 static void notrace submit_bio_noacct_handler(struct bio *bio)
@@ -379,9 +380,9 @@ static void notrace submit_bio_noacct_handler(struct bio *bio)
 {
 	if (!current->bio_list) {
 		if (bdev_filters_apply(bio)) {
-#if defined(HAVE_QC_SUBMIT_BIO_NOACCT)
+#if defined(HAVE_QC_SUBMIT_BIO_NOACCT) || defined(HAVE_QC_GENERIC_MAKE_REQUEST)
 			return BLK_QC_T_NONE;
-#elif defined(HAVE_VOID_SUBMIT_BIO_NOACCT)
+#elif defined(HAVE_VOID_SUBMIT_BIO_NOACCT) || defined (HAVE_VOID_GENERIC_MAKE_REQUEST)
 			return;
 #else
 #error "Your kernel is too old for this module."
@@ -389,9 +390,9 @@ static void notrace submit_bio_noacct_handler(struct bio *bio)
 		}
 	}
 
-#if defined(HAVE_QC_SUBMIT_BIO_NOACCT)
+#if defined(HAVE_QC_SUBMIT_BIO_NOACCT) || defined(HAVE_QC_GENERIC_MAKE_REQUEST)
 	return submit_bio_noacct_notrace(bio);
-#elif defined(HAVE_VOID_SUBMIT_BIO_NOACCT)
+#elif defined(HAVE_VOID_SUBMIT_BIO_NOACCT) || defined(HAVE_VOID_GENERIC_MAKE_REQUEST)
 	submit_bio_noacct_notrace(bio);
 #else
 #error "Your kernel is too old for this module."
@@ -448,7 +449,7 @@ module_init(lp_filter_init);
 module_exit(lp_filter_done);
 MODULE_INFO(livepatch, "Y");
 
-#elif defined(CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS)
+#elif defined(CONFIG_HAVE_DYNAMIC_FTRACE_WITH_REGS)
 #pragma message("ftrace filter used")
 
 #ifdef HAVE_FTRACE_REGS
@@ -471,11 +472,13 @@ unsigned char* funcname_submit_bio_noacct = "submit_bio_noacct";
 static struct ftrace_ops ops_submit_bio_noacct = {
 	.func = ftrace_handler_submit_bio_noacct,
 	.flags = FTRACE_OPS_FL_DYNAMIC |
-#ifndef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
+#ifndef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_REGS
 		FTRACE_OPS_FL_SAVE_REGS |
 #endif
-		FTRACE_OPS_FL_IPMODIFY |
-		FTRACE_OPS_FL_PERMANENT,
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5,5,0)
+		FTRACE_OPS_FL_PERMANENT |
+#endif
+		FTRACE_OPS_FL_IPMODIFY,
 };
 
 static int __init trace_filter_init(void)
