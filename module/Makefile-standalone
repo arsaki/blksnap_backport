@@ -21,7 +21,7 @@ ccflags-y += $(shell 								\
 		echo -D HAVE_VOID_GENERIC_MAKE_REQUEST)
 ccflags-y += $(shell 								\
 	grep -qw "struct super_block *freeze_bdev"				\
-		$(srctree)/include/linux/blkdev.h &&				\
+		$(srctree)/include/linux/blkdev.h $(srctree)/include/linux/fs.h && \
 		echo -D HAVE_SUPER_BLOCK_FREEZE)
 
 ccflags-y += $(shell 								\
