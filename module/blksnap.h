@@ -663,7 +663,7 @@ struct blk_snap_get_sector_state {
 
 #endif /* BLK_SNAP_MODIFICATION */
 
-#if LINUX_SOURCE_VERSION < KERNEL_VERSION(5,7,0)
+#if LINUX_SOURCES_VERSION < KERNEL_VERSION(5,7,0)
 static inline void import_uuid(uuid_t *dst, const __u8 *src)
 {
 	memcpy(dst, src, sizeof(uuid_t));
