@@ -4,6 +4,7 @@
 
 #include <linux/types.h>
 #include <linux/version.h>
+#include <linux/uuid.h>
 #define BLK_SNAP_CTL "blksnap-control"
 #define BLK_SNAP_IMAGE_NAME "blksnap-image"
 #define BLK_SNAP 'V'
