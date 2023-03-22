@@ -4,6 +4,7 @@
 #include <linux/slab.h>
 #include <linux/cdrom.h>
 #include <linux/blk-mq.h>
+#include <linux/version.h>
 #ifdef STANDALONE_BDEVFILTER
 #include "blksnap.h"
 #else
@@ -113,7 +114,9 @@ static void snapimage_free_disk(struct gendisk *disk)
 
 const struct block_device_operations bd_ops = {
 	.owner = THIS_MODULE,
+#if LINUX_KERNEL_SOURCE >= KERNEL_VERSION(5,9,0)
 	.submit_bio = snapimage_submit_bio,
+#endif
 #ifndef HAVE_GENHD_H
 	.free_disk = snapimage_free_disk,
 #endif
@@ -199,8 +202,11 @@ struct snapimage *snapimage_create(struct diff_area *diff_area,
 
 	snapimage->worker = task;
 	set_user_nice(task, MAX_NICE);
+#if LINUX_SOURCE_VERSION >= KERNEL_VERSION(5,8,0)
 	task->flags |= PF_LOCAL_THROTTLE | PF_MEMALLOC_NOIO;
-
+#else
+	task->flags |= PF_LESS_THROTTLE | PF_MEMALLOC_NOIO;
+#endif
 	disk = blk_alloc_disk(NUMA_NO_NODE);
 	if (!disk) {
 		pr_err("Failed to allocate disk\n");

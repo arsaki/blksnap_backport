@@ -3,7 +3,7 @@
 #define _UAPI_LINUX_BLK_SNAP_H
 
 #include <linux/types.h>
-
+#include <linux/version.h>
 #define BLK_SNAP_CTL "blksnap-control"
 #define BLK_SNAP_IMAGE_NAME "blksnap-image"
 #define BLK_SNAP 'V'
@@ -661,5 +661,17 @@ struct blk_snap_get_sector_state {
 	     struct blk_snap_get_sector_state)
 
 #endif /* BLK_SNAP_MODIFICATION */
+
+#if LINUX_SOURCE_VERSION < KERNEL_VERSION(5,7,0)
+static inline void import_uuid(uuid_t *dst, const __u8 *src)
+{
+	memcpy(dst, src, sizeof(uuid_t));
+}
+
+static inline void export_uuid(__u8 *dst, const uuid_t *src)
+{
+	memcpy(dst, src, sizeof(uuid_t));
+}
+#endif
 
 #endif /* _UAPI_LINUX_BLK_SNAP_H */
