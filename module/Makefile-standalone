@@ -12,7 +12,6 @@ ccflags-y += $(shell 								\
 ccflags-y += $(shell 								\
 	grep -qw "void submit_bio_noacct" $(srctree)/include/linux/blkdev.h &&	\
 		echo -D HAVE_VOID_SUBMIT_BIO_NOACCT)
-# backport !!!!
 ccflags-y += $(shell 								\
 	grep -qw "blk_qc_t generic_make_request" $(srctree)/include/linux/blkdev.h && \
 		echo -D HAVE_QC_GENERIC_MAKE_REQUEST)
