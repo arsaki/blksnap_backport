@@ -382,8 +382,6 @@ static void notrace submit_bio_noacct_handler(struct bio *bio)
 			return BLK_QC_T_NONE;
 #elif defined(HAVE_VOID_SUBMIT_BIO_NOACCT) || defined (HAVE_VOID_GENERIC_MAKE_REQUEST)
 			return;
-#else
-#error "Your kernel is too old for this module."
 #endif
 		}
 	}
@@ -392,8 +390,6 @@ static void notrace submit_bio_noacct_handler(struct bio *bio)
 	return submit_bio_noacct_notrace(bio);
 #elif defined(HAVE_VOID_SUBMIT_BIO_NOACCT) || defined(HAVE_VOID_GENERIC_MAKE_REQUEST)
 	submit_bio_noacct_notrace(bio);
-#else
-#error "Your kernel is too old for this module."
 #endif
 }
 
