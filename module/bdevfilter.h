@@ -59,9 +59,9 @@ static inline void bdev_filter_put(struct bdev_filter *flt)
 /* Only for livepatch version */
 int lp_bdev_filter_detach(const dev_t dev_id);
 
-#if defined(HAVE_QC_SUBMIT_BIO_NOACCT)
+#if defined(HAVE_QC_SUBMIT_BIO_NOACCT) || defined(HAVE_QC_GENERIC_MAKE_REQUEST)
 extern blk_qc_t (*submit_bio_noacct_notrace)(struct bio *);
-#elif defined(HAVE_VOID_SUBMIT_BIO_NOACCT)
+#elif defined(HAVE_VOID_SUBMIT_BIO_NOACCT) || defined (HAVE_VOID_GENERIC_MAKE_REQUEST)
 extern void (*submit_bio_noacct_notrace)(struct bio *);
 #endif
 

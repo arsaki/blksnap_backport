@@ -62,11 +62,13 @@ static int cbt_map_allocate(struct cbt_map *cbt_map)
 	if (cbt_map->read_map || cbt_map->write_map)
 		return -EINVAL;
 
-	read_map = __vmalloc(size, GFP_NOIO | __GFP_ZERO);
+//backport	read_map = __vmalloc(size, GFP_NOIO | __GFP_ZERO);
+	read_map = __vmalloc(size, GFP_NOIO | __GFP_ZERO, PAGE_KERNEL);
 	if (!read_map)
 		return -ENOMEM;
 
-	write_map = __vmalloc(size, GFP_NOIO | __GFP_ZERO);
+//backport	write_map = __vmalloc(size, GFP_NOIO | __GFP_ZERO);
+	write_map = __vmalloc(size, GFP_NOIO | __GFP_ZERO, PAGE_KERNEL);
 	if (!write_map) {
 		vfree(read_map);
 		return -ENOMEM;
