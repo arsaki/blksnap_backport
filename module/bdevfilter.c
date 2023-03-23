@@ -367,8 +367,6 @@ blk_qc_t (*submit_bio_noacct_notrace)(struct bio *) =
 void (*submit_bio_noacct_notrace)(struct bio *) =
 	(blk_qc_t (*)(struct bio *))((unsigned long)(generic_make_request) +
 				 CALL_INSTRUCTION_LENGTH);
-#else
-#error "Unable to define submit_bio_noacct_notrace pointer. No submit_bio_noacct or generic_make_request function. __FILE__:__LINE__"
 #endif
 EXPORT_SYMBOL(submit_bio_noacct_notrace);
 
