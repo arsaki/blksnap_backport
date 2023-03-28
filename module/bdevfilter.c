@@ -398,7 +398,11 @@ static void notrace submit_bio_noacct_handler(struct bio *bio)
 
 static struct klp_func funcs[] = {
 	{
+#if defined(HAVE_QC_GENERIC_MAKE_REQUEST) || defined(HAVE_VOID_GENERIC_MAKE_REQUEST)
+		.old_name= "generic_make_request",
+#elif
 		.old_name = "submit_bio_noacct",
+#endif
 		.new_func = submit_bio_noacct_handler,
 	},
 	{ 0 }
