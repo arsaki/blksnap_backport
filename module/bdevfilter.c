@@ -466,7 +466,12 @@ static void notrace ftrace_handler_submit_bio_noacct(unsigned long ip, unsigned 
 }
 #endif
 
+#if defined(HAVE_VOID_SUBMIT_NOACC) || defined(HAVE_QC_SUBMIT_NOACC)
 unsigned char* funcname_submit_bio_noacct = "submit_bio_noacct";
+#elif defined (HAVE_VOID_GENERIC_MAKE_REQUEST) || defined(HAVE_QC_GENERIC_MAKE_REQUEST)
+unsigned char* funcname_submit_bio_noacct = "generic_make_request";
+#endif
+
 static struct ftrace_ops ops_submit_bio_noacct = {
 	.func = ftrace_handler_submit_bio_noacct,
 	.flags = FTRACE_OPS_FL_DYNAMIC |
