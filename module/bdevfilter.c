@@ -365,7 +365,7 @@ blk_qc_t (*submit_bio_noacct_notrace)(struct bio *) =
 				 CALL_INSTRUCTION_LENGTH);
 #elif defined(HAVE_VOID_GENERIC_MAKE_REQUEST)
 void (*submit_bio_noacct_notrace)(struct bio *) =
-	(blk_qc_t (*)(struct bio *))((unsigned long)(generic_make_request) +
+	(void (*)(struct bio *))((unsigned long)(generic_make_request) +
 				 CALL_INSTRUCTION_LENGTH);
 #endif
 EXPORT_SYMBOL(submit_bio_noacct_notrace);
