@@ -447,7 +447,7 @@ module_init(lp_filter_init);
 module_exit(lp_filter_done);
 MODULE_INFO(livepatch, "Y");
 
-#elif defined(CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS)
+#elif defined(CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS) || defined(CONFIG_HAVE_DYNAMIC_FTRACE_WITH_REGS)
 #pragma message("ftrace filter used")
 
 #ifdef HAVE_FTRACE_REGS
