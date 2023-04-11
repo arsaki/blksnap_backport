@@ -447,7 +447,7 @@ module_init(lp_filter_init);
 module_exit(lp_filter_done);
 MODULE_INFO(livepatch, "Y");
 
-#elif defined(CONFIG_HAVE_DYNAMIC_FTRACE_WITH_REGS)
+#elif defined(CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS)
 #pragma message("ftrace filter used")
 
 #ifdef HAVE_FTRACE_REGS
@@ -475,7 +475,7 @@ unsigned char* funcname_submit_bio_noacct = "generic_make_request";
 static struct ftrace_ops ops_submit_bio_noacct = {
 	.func = ftrace_handler_submit_bio_noacct,
 	.flags = FTRACE_OPS_FL_DYNAMIC |
-#ifndef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_REGS
+#if !defined(CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS) 
 		FTRACE_OPS_FL_SAVE_REGS |
 #endif
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(5,5,0)
